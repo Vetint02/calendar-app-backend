@@ -15,6 +15,8 @@ import userRoutes from './routes/userRoutes.js'
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set('trust proxy', 1);
+
 await connectMongoDB();
 
 app.use(cors({
