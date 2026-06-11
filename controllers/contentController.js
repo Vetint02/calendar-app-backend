@@ -24,18 +24,18 @@ export async function createContent(req, res, next) {
 
 export async function fetchContent(req, res, next) {
     try {
-        if (!req.user) {
-            const error = new Error("You must be logged in to update content.");
-            error.status = 401;
-            return next(error);
-        }
-        let username = req.user.username;
+        const username = req.user.username;
+        const { day, month, year } = req.query; // change req.body to req.query
 
-        const day_contents = await content.find({ day: req.body.day, month: req.body.month + 1, year: req.body.year, username: username })
-        res.json(day_contents)
-    }
-    catch (error) {
-        error.message = "Failed to fetch data"
+        const day_contents = await content.find({
+            day: parseInt(day),
+            month: parseInt(month),
+            year: parseInt(year),
+            username
+        });
+
+        res.json(day_contents);
+    } catch (error) {
         next(error);
     }
 }
