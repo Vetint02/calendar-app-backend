@@ -2,9 +2,6 @@ import passport from "../config/passport.js"
 
 export const loginUser = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
-        console.log('err:', err);
-        console.log('user:', user);
-        console.log('info:', info);
         if (err) {
             return next(err)
         }
@@ -14,8 +11,6 @@ export const loginUser = (req, res, next) => {
 
         req.logIn(user, (err) => {
             if (err) return next(err);
-            console.log('Session after login:', req.session);
-            console.log('Session ID:', req.sessionID);
             return res.json({
                 message: "Successfully Authenticated",
                 user: { id: user._id, username: user.username }
