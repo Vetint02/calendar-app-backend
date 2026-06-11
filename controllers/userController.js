@@ -1,26 +1,25 @@
-import user from "../schema/users.js";
-import content from "../schema/content.js"
+import bcrypt from 'bcrypt';
+import User from "../schema/users.js";
 
-export async function registerUser(req, res, next){
+export async function registerUser(req, res, next) {
     try {
-        let {username, password} = req.body;
+        const { username, password } = req.body;
 
-        const existingUsers = await user.find();
-
-        let n = existingUsers.length;
-
-        for (let i = 0; i < n; i++) {
-            if (existingUsers[i].username === username) {
-                const err = new Error("Username already exists");
-                err.status = 400;
-                return next(err);
-            }
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username already taken.' });
         }
 
-        await user.create({ username, password });
-        res.json("user created successfully");
-    }
-    catch (error) {
+        const hashAmount = 12;
+        const hashedPassword = await bcrypt.hash(password, hashAmount);
+
+        const newUser = await User.create({
+            username,
+            password: hashedPassword
+        });
+
+        res.status(201).json({ message: 'Account created successfully.' });
+    } catch (error) {
         next(error);
     }
 }
