@@ -21,7 +21,7 @@ export const logoutUser = (req, res, next) => {
         if (err) {
             return next(err);
         }
-        res.redirect('/');
+        res.json({message: "Logged out"});
     });
 };
 
@@ -30,6 +30,25 @@ export function ensureAuthentication(req, res, next) {
         return next();
     }
     else {
-        res.json('authentication failed');
+        res.status(401).json({message: "authentication failed"});
     }
 };
+
+export function frontEndAuthentication(req, res) {
+    if (req.isAuthenticated())
+    {
+        return res.json({
+            isAuthenticated: true,
+            user: {
+                id: req.user._id,
+                username: req.user.username
+            }
+        })
+    }
+    else{
+        return res.json({
+            isAuthenticated: false,
+            user: null
+        })
+    }
+}

@@ -21,3 +21,18 @@ export async function createContent(req, res, next){
         next(error);
     }
 };
+
+export async function fetchContent(req, res, next){
+    try {
+        console.log("req.user:", req.user);
+        console.log("req.body:", req.body);
+        let username = req.user.username;
+
+        const day_contents = await content.find({day: req.body.day, month: req.body.month + 1, year: req.body.year, username: username})
+        res.json(day_contents)
+    }
+    catch (error){
+        error.message = "Failed to fetch data"
+        next(error);
+    }
+}

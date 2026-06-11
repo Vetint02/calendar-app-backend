@@ -4,6 +4,7 @@ import session from "express-session"
 import cors from "cors"
 import passport from "passport"
 import connectMongoDB from './config/connectDB.js'
+import MongoStore from "connect-mongo";
 import {ensureAuthentication} from "./controllers/authController.js"
 
 // -----------Routes----------------
@@ -17,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 await connectMongoDB();
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials: true
 }));
 app.use(urlencoded({ extended: true}));
@@ -27,12 +28,20 @@ app.use(session({
     secret: process.env.sessionSecret,
     resave: false,
     saveUninitialized: false,
-}))
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+    }),
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api/content', contentRoutes);
+app.use('/api/content', ensureAuthentication, contentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 
