@@ -13,10 +13,9 @@ export const loginUser = (req, res, next) => {
         }
 
         req.logIn(user, (err) => {
-            if (err) {
-                return next(err)
-            };
-
+            if (err) return next(err);
+            console.log('Session after login:', req.session);
+            console.log('Session ID:', req.sessionID);
             return res.json({
                 message: "Successfully Authenticated",
                 user: { id: user._id, username: user.username }
@@ -30,7 +29,7 @@ export const logoutUser = (req, res, next) => {
         if (err) {
             return next(err);
         }
-        res.json({message: "Logged out"});
+        res.json({ message: "Logged out" });
     });
 };
 
@@ -39,13 +38,12 @@ export function ensureAuthentication(req, res, next) {
         return next();
     }
     else {
-        res.status(401).json({message: "authentication failed"});
+        res.status(401).json({ message: "authentication failed" });
     }
 };
 
 export function frontEndAuthentication(req, res) {
-    if (req.isAuthenticated())
-    {
+    if (req.isAuthenticated()) {
         return res.json({
             isAuthenticated: true,
             user: {
@@ -54,7 +52,7 @@ export function frontEndAuthentication(req, res) {
             }
         })
     }
-    else{
+    else {
         return res.json({
             isAuthenticated: false,
             user: null

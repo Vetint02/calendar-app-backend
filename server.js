@@ -12,6 +12,9 @@ import authRoutes from './routes/authRoutes.js'
 import contentRoutes from './routes/contentRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 
+console.log('Session secret loaded:', !!process.env.sessionSecret);
+console.log('MongoDB URI loaded:', !!process.env.MONGODB_URI);
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
