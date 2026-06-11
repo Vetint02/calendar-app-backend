@@ -4,7 +4,7 @@ import {createContent, fetchContent, editContent, deleteContent, getMonthContent
 const router = Router();
 
 router.post("/create", createContent);
-router.post("/", fetchContent)
+router.get("/", fetchContent)
 router.put("/update", editContent)
 router.delete("/delete/:id", deleteContent)
 router.get('/month', getMonthContent);
