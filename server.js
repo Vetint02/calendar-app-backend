@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 await connectMongoDB();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://calendar-app-yuze.onrender.com",
     credentials: true
 }));
 app.use(urlencoded({ extended: true}));
